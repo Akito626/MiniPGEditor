@@ -37,38 +37,79 @@
             android:layout_weight="0.65"
             android:fillViewport="true">
 
-            <LinearLayout
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:fillViewport="true">
 
                 <LinearLayout
-                    android:id="@+id/line_list"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.1"
-                    android:orientation="vertical">
-                </LinearLayout>
+                    android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/source_code"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.9"
-                    android:background="#00000000"
-                    android:gravity="left|top"
-                    android:inputType="textMultiLine"
-                    android:maxLines="999"
-                    android:textSize="20dp" />
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/line_list"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.1"
+                        android:orientation="vertical"></LinearLayout>
+
+                    <EditText
+                        android:id="@+id/source_code"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.9"
+                        android:background="#00000000"
+                        android:gravity="left|top"
+                        android:maxLines="300"
+                        android:textSize="20dp" />
+                </LinearLayout>
+            </HorizontalScrollView>
         </ScrollView>
 
-        <ListView
-            android:id="@+id/output_list"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.35"
-            android:background="#afafb0" />
+            android:layout_weight="0.05"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:autoSizeTextType="uniform"
+                android:text="出力"
+                android:background="@drawable/border"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:autoSizeTextType="uniform"
+                android:text="入力"
+                android:background="@drawable/border"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
+            android:orientation="horizontal">
+
+            <ListView
+                android:id="@+id/output_list"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="@drawable/border" />
+            <EditText
+                android:id="@+id/input_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="@drawable/border"
+                android:gravity="left|top"/>
+        </LinearLayout>
     </LinearLayout>
 
     <!--        <com.google.android.material.tabs.TabLayout-->
