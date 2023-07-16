@@ -11,6 +11,8 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -43,6 +45,8 @@ public class EditorActivity extends AppCompatActivity {
     private String id;
     private Timer timer;
 
+    private Spinner spinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +56,7 @@ public class EditorActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        Spinner spinner = findViewById(R.id.spinner_language);
+        spinner = findViewById(R.id.spinner_language);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 R.layout.spinner_item,
@@ -60,6 +64,17 @@ public class EditorActivity extends AppCompatActivity {
         );
         adapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                prepareTemplate();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         sourceText = findViewById(R.id.source_code);
         sourceText.addTextChangedListener(new TextWatcher() {
@@ -114,7 +129,6 @@ public class EditorActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-        Spinner spinner = findViewById(R.id.spinner_language);
         String language = (String) spinner.getSelectedItem();
         String input = "";
 
@@ -289,5 +303,22 @@ public class EditorActivity extends AppCompatActivity {
             textView.setGravity(Gravity.CENTER);
             layout.addView(textView);
         }
+    }
+
+    public void prepareTemplate(){
+        String template = "";
+
+        switch ((String)spinner.getSelectedItem()){
+            case "java":
+                template = "import java.util.*;\n\n" +
+                            "public class Main{\n" +
+                            "   public static void main(String[] args){\n" +
+                            "       System.out.println(\"Hello World\");\n" +
+                            "   }\n" +
+                            "}";
+                break;
+        }
+
+        sourceText.setText(template);
     }
 }
