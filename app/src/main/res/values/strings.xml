@@ -1,3 +1,40 @@
 <resources>
     <string name="app_name">MiniPGEditor</string>
+
+    <string-array name="language">
+        <item>c</item>
+        <item>cpp</item>
+        <item>objective-c</item>
+        <item>java</item>
+        <item>kotlin</item>
+        <item>scala</item>
+        <item>swift</item>
+        <item>csharp</item>
+        <item>go</item>
+        <item>haskell</item>
+        <item>erlang</item>
+        <item>perl</item>
+        <item>python</item>
+        <item>python3</item>
+        <item>ruby</item>
+        <item>php</item>
+        <item>bash</item>
+        <item>r</item>
+        <item>javascript</item>
+        <item>coffeescript</item>
+        <item>vb</item>
+        <item>cobol</item>
+        <item>fsharp</item>
+        <item>d</item>
+        <item>clojure</item>
+        <item>elixir</item>
+        <item>mysql</item>
+        <item>rust</item>
+        <item>scheme</item>
+        <item>commonlisp</item>
+        <item>nadesiko</item>
+        <item>typescript</item>
+        <item>brainfuck</item>
+        <item>plain</item>
+    </string-array>
 </resources>

@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -33,6 +35,16 @@ public class EditorActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_editor);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        Spinner spinner = findViewById(R.id.spinner_language);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                R.layout.spinner_item,
+                getResources().getStringArray(R.array.language)
+        );
+        adapter.setDropDownViewResource(R.layout.spinner_item);
+        spinner.setAdapter(adapter);
 
         handler = new Handler();
     }
