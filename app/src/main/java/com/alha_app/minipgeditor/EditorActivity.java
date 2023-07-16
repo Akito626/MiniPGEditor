@@ -22,11 +22,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public class EditorActivity extends AppCompatActivity {
-    Handler handler;
+    private Handler handler;
+
+    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +73,12 @@ public class EditorActivity extends AppCompatActivity {
     public void runCode(){
         EditText sourceText = findViewById(R.id.source_code);
         // code
-        String sourceCode = sourceText.getText().toString();
+        String sourceCode = null;
+        try {
+            sourceCode = URLEncoder.encode(sourceText.getText().toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
         String language = "java";
         String input = "";
 
@@ -100,10 +109,76 @@ public class EditorActivity extends AppCompatActivity {
                 sb.append(tmp);
             }
             result = sb.toString();
+            System.out.println(sourceCode);
+            jsonResult = mapper.readTree(result);
+            id = jsonResult.get("id").toString();
+            String status = jsonResult.get("status").toString();
+            System.out.println(result);
+
+            br.close();
+            con.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getStatus(){
+        String urlString = "http://api.paiza.io:80/runners/get_status?id=" + id + "&api_key=guest";
+        StringBuilder sb = new StringBuilder();
+        String result = "";
+        JsonNode jsonResult = null;
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+            // 通信開始
+            con.connect();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String tmp = "";
+            while ((tmp = br.readLine()) != null) {
+                sb.append(tmp);
+            }
+            result = sb.toString();
             System.out.println(result);
             jsonResult = mapper.readTree(result);
-            String id = jsonResult.get("id").toString();
             String status = jsonResult.get("status").toString();
+
+            if(status.equals("completed")){
+                getResult();
+            }
+
+            br.close();
+            con.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getResult(){
+        String urlString = "http://api.paiza.io:80/runners/get_details?id=" + id + "&api_key=guest";
+        StringBuilder sb = new StringBuilder();
+        String result = "";
+        JsonNode jsonResult = null;
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+            // 通信開始
+            con.connect();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String tmp = "";
+            while ((tmp = br.readLine()) != null) {
+                sb.append(tmp);
+            }
+            result = sb.toString();
+            System.out.println(result);
+            jsonResult = mapper.readTree(result);
 
             br.close();
             con.disconnect();
