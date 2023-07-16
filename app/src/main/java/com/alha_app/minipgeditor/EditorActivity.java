@@ -235,7 +235,6 @@ public class EditorActivity extends AppCompatActivity {
                 sb.append(tmp);
             }
             result = sb.toString();
-            System.out.println(result);
             jsonResult = mapper.readTree(result);
             if (jsonResult.get("error") != null) {
                 String error = jsonResult.get("error").toString();
@@ -318,6 +317,7 @@ public class EditorActivity extends AppCompatActivity {
                 resultData[4][1] = time;
                 tmp = jsonResult.get("stdout").toString();
                 stdout += tmp.substring(1, tmp.length() - 1);
+                stdout = stdout.replaceAll("\\\\n", "\n");
                 resultData[5][1] = stdout;
             }
 
