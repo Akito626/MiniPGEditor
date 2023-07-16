@@ -34,6 +34,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -179,6 +180,7 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    // 実行が終わったか確認
     public void getStatus(){
         String urlString = "http://api.paiza.io:80/runners/get_status?id=" + id + "&api_key=guest";
         StringBuilder sb = new StringBuilder();
@@ -204,9 +206,7 @@ public class EditorActivity extends AppCompatActivity {
             if(jsonResult.get("error") != null) {
                 String error = jsonResult.get("error").toString();
                 timer.cancel();
-                System.out.println(error);
-                System.out.println(id);
-                System.out.println(result);
+                Toast.makeText(this, "エラーが発生しました", Toast.LENGTH_SHORT).show();
 
                 return;
             }
@@ -225,6 +225,7 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    // 実行結果を取得
     public void getResult(){
         String urlString = "http://api.paiza.io:80/runners/get_details?id=" + id + "&api_key=guest";
         StringBuilder sb = new StringBuilder();
@@ -233,13 +234,13 @@ public class EditorActivity extends AppCompatActivity {
         ObjectMapper mapper = new ObjectMapper();
 
         // 結果出力用
-        String[] resultData = new String[6];
-        String build_time;
-        String build_result;
-        String build_stderr;
-        String stdout;
-        String exit_code;
-        String time;
+        ArrayList<String> resultData = new ArrayList<>();
+        String build_time = "build_time：";
+        String build_result = "build_result：";
+        String build_stderr = "エラー：";
+        String stdout = "出力：";
+        String exit_code = "exit_code：";
+        String time = "実行時間：";
         ListView listView = findViewById(R.id.output_list);
 
         try {
@@ -256,19 +257,28 @@ public class EditorActivity extends AppCompatActivity {
             }
             result = sb.toString();
             jsonResult = mapper.readTree(result);
-            build_time = jsonResult.get("build_time").toString();
-            build_result = jsonResult.get("build_result").toString();
-            build_stderr = jsonResult.get("build_stderr").toString();
-            stdout = jsonResult.get("stdout").toString();
-            exit_code = String.valueOf(jsonResult.get("exit_code").asInt());
-            time = jsonResult.get("time").toString();
 
-            resultData[0] = build_time;
-            resultData[1] = build_result;
-            resultData[2] = build_stderr;
-            resultData[3] = stdout;
-            resultData[4] = exit_code;
-            resultData[5] = time;
+            // 結果を取得し、resultDataにセットする
+            exit_code += String.valueOf(jsonResult.get("exit_code").asInt());
+            resultData.add(exit_code);
+            tmp = jsonResult.get("build_result").toString();
+            build_result += tmp.substring(1, tmp.length()-1);
+            resultData.add(build_result);
+            tmp = jsonResult.get("build_stderr").toString();
+            tmp = tmp.substring(1, tmp.length()-1);
+            if(!tmp.equals("")) {
+                build_stderr += tmp;
+                resultData.add(build_stderr);
+            }
+            tmp = jsonResult.get("build_time").toString();
+            build_time += tmp.substring(1, tmp.length()-1);
+            resultData.add(build_time);
+            tmp = jsonResult.get("time").toString();
+            time += tmp.substring(1, tmp.length()-1);
+            resultData.add(time);
+            tmp = jsonResult.get("stdout").toString();
+            stdout += tmp.substring(1, tmp.length()-1);
+            resultData.add(stdout);
 
             handler.post(() -> {
                 listView.setAdapter(new ArrayAdapter<>(
@@ -285,6 +295,7 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    // 行番号を表示
     public void prepareLineList(int lineCount){
         LinearLayout layout = findViewById(R.id.line_list);
         float margin = sourceText.getLineHeight() * getApplicationContext().getResources().getDisplayMetrics().scaledDensity;  // sp -> px
@@ -297,14 +308,15 @@ public class EditorActivity extends AppCompatActivity {
         layout.removeAllViews();
         for(int i = 1; i < lineCount+1; i++){
             TextView textView = new TextView(this);
-            textView.setText(String.format("%3d", i));
+            textView.setText(String.format("%4d", i));
             textView.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
             textView.setLayoutParams(layoutParams);
-            textView.setGravity(Gravity.CENTER);
+            textView.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL);
             layout.addView(textView);
         }
     }
 
+    // テンプレートを表示
     public void prepareTemplate(){
         String template = "";
 
