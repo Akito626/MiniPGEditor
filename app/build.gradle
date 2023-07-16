@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.alha_app.minipgeditor"
-        minSdk 24
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"

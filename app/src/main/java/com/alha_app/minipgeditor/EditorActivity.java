@@ -6,12 +6,17 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,15 +32,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class EditorActivity extends AppCompatActivity {
     private Handler handler;
 
+    private EditText sourceText;
     private String id;
-
-    Timer timer;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,30 @@ public class EditorActivity extends AppCompatActivity {
         );
         adapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(adapter);
+
+        sourceText = findViewById(R.id.source_code);
+        sourceText.addTextChangedListener(new TextWatcher() {
+            int lineCount = 1;
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(lineCount != sourceText.getLineCount()){
+                    lineCount = sourceText.getLineCount();
+                    prepareLineList(lineCount);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        prepareLineList(1);
 
         handler = new Handler();
     }
@@ -77,7 +107,6 @@ public class EditorActivity extends AppCompatActivity {
 
     public void runCode(){
         // ソースコードを取得し、エンコードする
-        EditText sourceText = findViewById(R.id.source_code);
         String sourceCode = null;
         try {
             sourceCode = URLEncoder.encode(sourceText.getText().toString(), "UTF-8");
@@ -239,6 +268,26 @@ public class EditorActivity extends AppCompatActivity {
             con.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void prepareLineList(int lineCount){
+        LinearLayout layout = findViewById(R.id.line_list);
+        float margin = sourceText.getLineHeight() * getApplicationContext().getResources().getDisplayMetrics().scaledDensity;  // sp -> px
+        margin = margin / getApplicationContext().getResources().getDisplayMetrics().density;  // px -> dp
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (int)margin
+        );
+
+        layout.removeAllViews();
+        for(int i = 1; i < lineCount+1; i++){
+            TextView textView = new TextView(this);
+            textView.setText(String.format("%3d", i));
+            textView.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+            textView.setLayoutParams(layoutParams);
+            textView.setGravity(Gravity.CENTER);
+            layout.addView(textView);
         }
     }
 }
