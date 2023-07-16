@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -51,6 +52,7 @@ public class EditorActivity extends AppCompatActivity {
 
     private Spinner spinner;
     private ListView outputList;
+    private EditText inputText;
 
     private boolean isRun;
 
@@ -108,7 +110,22 @@ public class EditorActivity extends AppCompatActivity {
         });
 
         outputList = findViewById(R.id.output_list);
+        inputText = findViewById(R.id.input_text);
         isRun = false;
+        TextView outputButton = findViewById(R.id.output_button);
+        TextView inputButton = findViewById(R.id.input_button);
+        outputButton.setOnClickListener(v -> {
+            outputButton.setBackgroundResource(R.drawable.border_silver);
+            inputButton.setBackgroundResource(R.drawable.border);
+            outputList.setVisibility(View.VISIBLE);
+            inputText.setVisibility(View.INVISIBLE);
+        });
+        inputButton.setOnClickListener(v -> {
+            inputButton.setBackgroundResource(R.drawable.border_silver);
+            outputButton.setBackgroundResource(R.drawable.border);
+            inputText.setVisibility(View.VISIBLE);
+            outputList.setVisibility(View.INVISIBLE);
+        });
 
         prepareLineList(1);
 
@@ -148,7 +165,6 @@ public class EditorActivity extends AppCompatActivity {
         }
 
         String language = (String) spinner.getSelectedItem();
-        EditText inputText = findViewById(R.id.input_text);
         String input = inputText.getText().toString();
 
         String urlString = "http://api.paiza.io:80/runners/create?source_code=" + sourceCode + "&language=" + language + "&api_key=guest";
