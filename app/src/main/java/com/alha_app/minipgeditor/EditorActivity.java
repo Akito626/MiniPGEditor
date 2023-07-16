@@ -50,6 +50,9 @@ public class EditorActivity extends AppCompatActivity {
     private Timer timer;
 
     private Spinner spinner;
+    private ListView outputList;
+
+    private boolean isRun;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +92,7 @@ public class EditorActivity extends AppCompatActivity {
 
             }
 
+            // 行数が変わったら行番号を再表示
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (lineCount != sourceText.getLineCount()) {
@@ -102,6 +106,9 @@ public class EditorActivity extends AppCompatActivity {
 
             }
         });
+
+        outputList = findViewById(R.id.output_list);
+        isRun = false;
 
         prepareLineList(1);
 
@@ -117,8 +124,13 @@ public class EditorActivity extends AppCompatActivity {
     // メニューの設定
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_run) {
-            Toast.makeText(this, "run", Toast.LENGTH_SHORT).show();
+        if (item.getItemId() == R.id.action_run && !isRun) {
+            isRun = true;
+            outputList.setAdapter(new ArrayAdapter<>(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    new String[]{"ビルド中"}
+            ));
             new Thread(() -> {
                 runCode();
             }).start();
@@ -254,7 +266,6 @@ public class EditorActivity extends AppCompatActivity {
         String build_time = "";
         String time = "";
         String stdout = "";
-        ListView listView = findViewById(R.id.output_list);
 
         try {
             URL url = new URL(urlString);
@@ -305,13 +316,14 @@ public class EditorActivity extends AppCompatActivity {
             }
 
             handler.post(() -> {
-                listView.setAdapter(new SimpleAdapter(
+                outputList.setAdapter(new SimpleAdapter(
                         this,
                         listData,
                         android.R.layout.simple_list_item_2,
                         new String[] {"name", "detail"},
                         new int[] {android.R.id.text1, android.R.id.text2}
                 ));
+                isRun = false;
             });
 
             br.close();
