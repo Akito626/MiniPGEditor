@@ -157,20 +157,23 @@ public class EditorActivity extends AppCompatActivity {
     public void runCode() {
         // ソースコードを取得し、エンコードする
         String sourceCode = null;
+        String input = null;
         try {
             sourceCode = URLEncoder.encode(sourceText.getText().toString(), "UTF-8");
+            input = URLEncoder.encode(inputText.getText().toString(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
 
         String language = (String) spinner.getSelectedItem();
-        String input = inputText.getText().toString();
 
         String urlString = "http://api.paiza.io:80/runners/create?source_code=" + sourceCode + "&language=" + language + "&api_key=guest";
         StringBuilder sb = new StringBuilder();
         String result = "";
         JsonNode jsonResult = null;
         ObjectMapper mapper = new ObjectMapper();
+
+        System.out.println(input);
 
         if (!input.equals("")) {
             String tmp = "&input=" + input;
