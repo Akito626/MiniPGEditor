@@ -205,6 +205,7 @@ public class EditorActivity extends AppCompatActivity {
                 }
             };
             timer.schedule(task, 1000, 1000);
+            System.out.println("id：" + id);
 
             br.close();
             con.disconnect();
@@ -306,19 +307,16 @@ public class EditorActivity extends AppCompatActivity {
             resultData[2][1] = build_result;
             tmp = jsonResult.get("build_stderr").toString();
             tmp = tmp.substring(1, tmp.length() - 1);
-            if (!tmp.equals("")) {
-                build_stderr += tmp;
-                build_stderr = build_stderr.replaceAll("\\\\n", "\n");
-                resultData[3][1] = build_stderr;
-            } else {
-                tmp = jsonResult.get("time").toString();
-                time += tmp.substring(1, tmp.length() - 1);
-                resultData[4][1] = time;
-                tmp = jsonResult.get("stdout").toString();
-                stdout += tmp.substring(1, tmp.length() - 1);
-                stdout = stdout.replaceAll("\\\\n", "\n");
-                resultData[5][1] = stdout;
-            }
+            build_stderr += tmp;
+            build_stderr = build_stderr.replaceAll("\\\\n", "\n");
+            resultData[3][1] = build_stderr;
+            tmp = jsonResult.get("time").toString();
+            time += tmp.substring(1, tmp.length() - 1);
+            resultData[4][1] = time;
+            tmp = jsonResult.get("stdout").toString();
+            stdout += tmp.substring(1, tmp.length() - 1);
+            stdout = stdout.replaceAll("\\\\n", "\n");
+            resultData[5][1] = stdout;
 
             ArrayList<Map<String, String>> listData = new ArrayList<>();
             for (String[] datum : resultData) {
@@ -335,8 +333,8 @@ public class EditorActivity extends AppCompatActivity {
                         this,
                         listData,
                         android.R.layout.simple_list_item_2,
-                        new String[] {"name", "detail"},
-                        new int[] {android.R.id.text1, android.R.id.text2}
+                        new String[]{"name", "detail"},
+                        new int[]{android.R.id.text1, android.R.id.text2}
                 ));
                 isRun = false;
             });
@@ -353,7 +351,7 @@ public class EditorActivity extends AppCompatActivity {
         TextView lineList = findViewById(R.id.line_list);
         StringBuilder sb = new StringBuilder();
         sb.append("1");
-        for(int i = 2; i <= lineCount; i++){
+        for (int i = 2; i <= lineCount; i++) {
             sb.append("\n" + i);
         }
         lineList.setText(sb.toString());
