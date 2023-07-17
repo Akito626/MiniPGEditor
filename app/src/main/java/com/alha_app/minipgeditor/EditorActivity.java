@@ -268,7 +268,6 @@ public class EditorActivity extends AppCompatActivity {
 
         // 結果出力用
         String[][] resultData = new String[6][2];
-        //ArrayList<ArrayList<String>> resultData = new ArrayList<>();
         resultData[0][0] = "exit_code";
         resultData[1][0] = "build_time";
         resultData[2][0] = "build_result";
@@ -310,6 +309,7 @@ public class EditorActivity extends AppCompatActivity {
             tmp = tmp.substring(1, tmp.length() - 1);
             if (!tmp.equals("")) {
                 build_stderr += tmp;
+                build_stderr = build_stderr.replaceAll("\\\\n", "\n");
                 resultData[3][1] = build_stderr;
             } else {
                 tmp = jsonResult.get("time").toString();
