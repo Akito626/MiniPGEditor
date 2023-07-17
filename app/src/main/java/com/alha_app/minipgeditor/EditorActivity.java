@@ -65,6 +65,7 @@ public class EditorActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        sourceText = findViewById(R.id.source_code);
         spinner = findViewById(R.id.spinner_language);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
@@ -84,8 +85,6 @@ public class EditorActivity extends AppCompatActivity {
 
             }
         });
-
-        sourceText = findViewById(R.id.source_code);
         sourceText.addTextChangedListener(new TextWatcher() {
             int lineCount = 1;
 
@@ -372,6 +371,7 @@ public class EditorActivity extends AppCompatActivity {
                         "       System.out.println(\"Hello World\");\n" +
                         "   }\n" +
                         "}";
+                prepareLineList(7);
                 break;
         }
 
