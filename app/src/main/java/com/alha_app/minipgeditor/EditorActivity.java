@@ -351,27 +351,13 @@ public class EditorActivity extends AppCompatActivity {
 
     // 行番号を表示
     public void prepareLineList(int lineCount) {
-        LinearLayout layout = findViewById(R.id.line_list);
-        float height = sourceText.getLineHeight() * getApplicationContext().getResources().getDisplayMetrics().scaledDensity;  // sp -> px
-        height = height / getApplicationContext().getResources().getDisplayMetrics().density;  // px -> dp
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                (int) height
-        );
-
-        float textSize = sourceText.getTextSize() * getApplicationContext().getResources().getDisplayMetrics().scaledDensity;  // sp -> px
-        textSize = textSize / getApplicationContext().getResources().getDisplayMetrics().density;  // px -> dp
-
-        layout.removeAllViews();
-        for (int i = 1; i < lineCount + 1; i++) {
-            TextView textView = new TextView(this);
-            textView.setTextSize(textSize);
-            textView.setText(String.format("%4d", i));
-            textView.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-            textView.setLayoutParams(layoutParams);
-            textView.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
-            layout.addView(textView);
+        TextView lineList = findViewById(R.id.line_list);
+        StringBuilder sb = new StringBuilder();
+        sb.append("1");
+        for(int i = 2; i <= lineCount; i++){
+            sb.append("\n" + i);
         }
+        lineList.setText(sb.toString());
     }
 
     // テンプレートを表示

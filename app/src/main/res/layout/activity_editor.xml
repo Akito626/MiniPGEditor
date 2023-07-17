@@ -47,12 +47,13 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-                    <LinearLayout
+                    <TextView
                         android:id="@+id/line_list"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.1"
-                        android:orientation="vertical"></LinearLayout>
+                        android:gravity="center_horizontal|top"
+                        android:textSize="20dp" />
 
                     <EditText
                         android:id="@+id/source_code"
